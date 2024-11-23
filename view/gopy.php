@@ -59,7 +59,7 @@
         }
     </style>
 <div class="mb">
-        <div class="box_title">LIÊN HỆ</div>
+        <div class="box_title">Góp ý</div>
         <div class="box_content">
         <section class="feedback">
         <h2>Góp Ý</h2>

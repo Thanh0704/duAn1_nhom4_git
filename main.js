@@ -1,30 +1,39 @@
-var album=[];
-for(var i=0;i<5;i++){
-    album[i]=new Image();
-    album[i].src="img/anh"+i+".jpg";
+// Tạo mảng chứa các ảnh trong slideshow
+const album = [];
+for (let i = 0; i < 5; i++) {
+    album[i] = new Image();
+    album[i].src = `img/banner${i}.jpg`;
 }
- var interval=setInterval(slideshow,2000);
-index=0;
-function slideshow(){
+
+// Khởi tạo biến điều khiển
+let index = 0;
+
+// Hàm hiển thị slide
+function slideshow() {
     index++;
-    if(index>4){
-        index=0;
+    if (index >= album.length) {
+        index = 0;
     }
-    document.getElementById("banner").src=album[index].src;
+    document.getElementById("banner").src = album[index].src;
 }
-function next(){
+
+// Hàm chuyển đến slide tiếp theo
+function next() {
     index++;
-    if(index>4){
-        index=0;
+    if (index >= album.length) {
+        index = 0;
     }
-    document.getElementById("banner").src=album[index].src;
-   
+    document.getElementById("banner").src = album[index].src;
 }
-function pre(){
+
+// Hàm chuyển đến slide trước đó
+function pre() {
     index--;
-    if(index<0){
-        index=4;
+    if (index < 0) {
+        index = album.length - 1;
     }
-    document.getElementById("banner").src=album[index].src;
-   
+    document.getElementById("banner").src = album[index].src;
 }
+
+// Tự động chạy slideshow
+const interval = setInterval(slideshow, 3000);
