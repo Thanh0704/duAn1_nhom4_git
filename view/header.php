@@ -70,6 +70,13 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    .logo img{
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 100px;
+      /* align-items: center; */
+      margin: 0 auto;
+    }
     /* Đa màn hình */
     @media (max-width: 768px) {
       header h1 {
@@ -88,6 +95,9 @@
     <!-- HEADER -->
     <header>
       <div class="row mb header">
+        <div class="logo">
+        <img src="uploads/logoo.jpg" alt="">
+        </div>
         <h1>Website bán phụ kiện điện thoại GPhone</h1>
       </div>
       <div class="row mb menu">

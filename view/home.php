@@ -280,6 +280,7 @@
 
         <!-- Items -->
         <div class="items">
+            
             <?php
             $i = 0;
             foreach ($spnew as $sp) {
@@ -294,7 +295,7 @@
                 echo '<div class="box_items ' . $mr . '">
                     <div class="box_items_img">
                         <a class="item_name" href="'.$linksp.'"><img src="' . $hinh . '" alt=""></a>
-                        <div class="add"><a href="#">ADD TO CART</a></div>
+                       <div class="add">Add to cart </div>
                     </div>
                     <a class="item_name" href="">' . $name . '</a>
                     <p class="price">' . $price . ' VNĐ</p>

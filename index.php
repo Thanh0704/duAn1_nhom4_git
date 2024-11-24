@@ -6,6 +6,7 @@ include "model/danhmuc.php";
 include "model/taikhoan.php";
 include "model/binhluan.php";
 include "view/header.php";
+// include "view/cart.php";
 include "global.php";
 $spnew = loadall_sanpham_home();
 $dsdm = loadall_danhmuc();
