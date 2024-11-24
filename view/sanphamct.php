@@ -164,6 +164,7 @@
                 <div class="box_content">
                     <?php
                     $hinh = $img_path . $img;
+                    // echo $hinh;
                     echo '<div class="spct"><img src="' . $hinh . '" alt="Product Image"></div>';
                     echo '<p class="price">Giá: ' . $price . ' VNĐ</p>';
                     echo '<p class="description">Mô tả: ' . $mota . '</p>';

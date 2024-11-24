@@ -1,3 +1,62 @@
+<?php
+session_start();
+
+// Kiểm tra xem dữ liệu có được gửi qua POST không
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'] ?? null;
+    $product_name = $_POST['product_name'] ?? '';
+    $product_price = $_POST['product_price'] ?? 0;
+    $product_image = $_POST['product_image'] ?? '';
+
+    if ($product_id !== null) {
+        // Nếu giỏ hàng chưa tồn tại, khởi tạo
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        // Nếu sản phẩm đã tồn tại trong giỏ hàng, tăng số lượng
+        if (isset($_SESSION['cart'][$product_id])) {
+            $_SESSION['cart'][$product_id]['quantity']++;
+        } else {
+            // Thêm sản phẩm mới
+            $_SESSION['cart'][$product_id] = [
+                'name' => $product_name,
+                'price' => $product_price,
+                'image' => $product_image,
+                'quantity' => 1,
+            ];
+        }
+    }
+}
+
+
+// Định nghĩa đường dẫn thư mục ảnh
+$img_path = "uploads/";
+
+// Kiểm tra nếu có dữ liệu POST được gửi từ trang sản phẩm
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_name = $_POST['product_name'] ?? '';
+    $product_price = $_POST['product_price'] ?? 0;
+    $product_image = $_POST['product_image'] ?? '';
+
+    // Kiểm tra và xử lý đường dẫn ảnh
+    if (!empty($product_image)) {
+        $product_image_full = $img_path . $product_image;
+    } else {
+        $product_image_full = "default_image.jpg"; // Hình ảnh mặc định nếu không có ảnh
+    }
+} else {
+    // Nếu không có dữ liệu, chuyển về trang sản phẩm
+    header('Location: sanphamct.php');
+    exit;
+}
+// Hiển thị giỏ hàng
+$cart = $_SESSION['cart'] ?? [];
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +65,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ Hàng</title>
     <style>
-        /* Reset CSS */
+        /* Đặt lại CSS */
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +73,9 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
         }
 
         /* Header */
@@ -29,172 +88,170 @@
             font-weight: bold;
         }
 
-        /* Main Container */
+        /* Container giỏ hàng */
         .cart-container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        /* Cart Table */
+        /* Bảng giỏ hàng */
         .cart-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
 
-        .cart-table th,
-        .cart-table td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
         .cart-table th {
             background-color: #007bff;
             color: white;
+            font-size: 16px;
+            text-transform: uppercase;
+            padding: 15px;
         }
 
-        .cart-table td img {
-            max-width: 100px;
-            border-radius: 10px;
+        .cart-table td {
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
         }
 
         .cart-table .product-name {
             text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-table .product-name img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
         }
 
         .cart-table input[type="number"] {
             width: 60px;
             padding: 5px;
             text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
         }
 
-        /* Total Section */
+        .cart-table input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+        }
+
+        .cart-table a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .cart-table a:hover {
+            text-decoration: underline;
+        }
+
+        /* Tổng cộng */
         .total-section {
             display: flex;
             justify-content: flex-end;
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-top: 10px;
         }
 
-        .total-section p {
-            margin-left: 20px;
+        .total-section strong {
+            font-size: 20px;
+            color: #28a745;
         }
 
-        /* Checkout Button */
+        /* Nút thanh toán */
         .checkout-btn {
             background-color: #28a745;
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-align: center;
-            font-size: 18px;
             transition: background-color 0.3s;
+            margin-top: 20px;
+            display: inline-block;
+            text-align: center;
         }
 
         .checkout-btn:hover {
             background-color: #218838;
         }
 
-        /* Footer */
-        .footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 40px 20px;
-        }
-
-        .footer .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .footer-column {
-            flex: 1 1 calc(33.333% - 20px);
-            min-width: 250px;
-        }
-
-        .footer-logo img {
-            width: 150px;
-            margin-bottom: 15px;
-        }
-
-        .company-info {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .contact-info {
-            list-style: none;
-            padding: 0;
-        }
-
-        .contact-info li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .contact-info i {
-            margin-right: 10px;
-            color: #f39c12;
-        }
-
-        .social-icons a {
-            margin-right: 10px;
-            font-size: 18px;
-            color: #ecf0f1;
-            transition: color 0.3s;
-        }
-
-        .social-icons a:hover {
-            color: #f39c12;
-        }
-
-        h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #f39c12;
-        }
-
-        .footer-column ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 10px;
-        }
-
-        .footer-column ul li a {
-            text-decoration: none;
-            color: #ecf0f1;
-            transition: color 0.3s;
-        }
-
-        .footer-column ul li a:hover {
-            color: #f39c12;
-        }
-
-        .footer-bottom {
+        /* Thông báo giỏ hàng trống */
+        .empty-cart {
             text-align: center;
-            padding-top: 20px;
-            font-size: 14px;
-            border-top: 1px solid #7f8c8d;
+            font-size: 18px;
+            color: #888;
+            padding: 20px 0;
+        }
+
+        /* Định dạng container chứa các nút */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            /* Căn giữa các nút */
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+            gap: 15px;
+            /* Khoảng cách giữa các nút */
             margin-top: 20px;
+        }
+
+        /* Định dạng chung cho nút */
+        .button-group button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* Nút Thanh Toán */
+        .checkout-btn {
+            background-color: #28a745;
+            /* Màu xanh */
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background-color: #218838;
+            /* Xanh đậm khi hover */
+        }
+
+        /* Nút Trở Về */
+        .back-btn {
+            background-color: #6c757d;
+            /* Màu xám */
+            color: white;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+            /* Xám đậm khi hover */
         }
     </style>
 </head>
 
 <body>
-
     <!-- Header -->
     <header>
         Giỏ Hàng Của Bạn
@@ -202,7 +259,6 @@
 
     <!-- Cart Container -->
     <div class="cart-container">
-        <!-- Cart Table -->
         <table class="cart-table">
             <thead>
                 <tr>
@@ -214,89 +270,61 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Product Row -->
-                <tr>
-                    <td class="product-name">
-                        <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/s/a/sac-anker-1c-20w-a2347-a-01.png" alt="Product Image">
-                       Củ Sạc dự phòng
-                    </td>
-                    <td>200.000 VNĐ</td>
-                    <td><input type="number" value="1" min="1"></td>
-                    <td>200.000 VNĐ</td>
-                    <td><button class="remove-btn" style="color: red;">Xóa</button></td>
-                </tr>
-                <tr>
-                    <td class="product-name">
-                        <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/a/tai-nghe-gaming-havit-h2040d_1_.png" alt="Product Image">
-                        Tai nghe Chụp Gaming
-                    </td>
-                    <td>150.000 VNĐ</td>
-                    <td><input type="number" value="1" min="1"></td>
-                    <td>150.000 VNĐ</td>
-                    <td><button class="remove-btn" style="color: red;">Xóa</button></td>
-                </tr>
-                <!-- Add more products as needed -->
+                <?php if (!empty($cart)): ?>
+                    <?php foreach ($cart as $id => $item): ?>
+                        <tr>
+                            <td class="product-name">
+                                <?php
+                                echo '<img src="../' . $product_image . '" alt="Product Image">';
+                                ?>
+                                <?php echo htmlspecialchars($item['name']); ?>
+                            </td>
+                            <td><?php echo number_format($item['price']); ?> VNĐ</td>
+                            <td>
+                                <input type="number" value="<?php echo $item['quantity']; ?>" min="1">
+                            </td>
+                            <td>
+                                <?php echo number_format($item['price'] * $item['quantity']); ?> VNĐ
+                            </td>
+                            <td>
+                                <a href="remove_item.php?id=<?php echo $id; ?>">Xóa</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="empty-cart">Giỏ hàng của bạn đang trống!</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 
-        <!-- Total Section -->
         <div class="total-section">
-            <p>Tổng cộng: <strong>350.000 VNĐ</strong></p>
+            <p>Tổng cộng:
+                <strong>
+                    <?php
+                    $total = 0;
+                    foreach ($cart as $item) {
+                        $total += $item['price'] * $item['quantity'];
+                    }
+                    echo number_format($total);
+                    ?> VNĐ
+                </strong>
+            </p>
         </div>
 
-        <!-- Checkout Button -->
         <div style="text-align: center;">
-        <form action="xacNhanThanhToan.php" method="POST">
-            <button type="submit" class="checkout-btn">Thanh Toán</button>
-        </form>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-    <div class="container">
-        <!-- Column 1 -->
-        <div class="footer-column">
-            <div class="footer-logo">
-                <img src="img/FPTShop_logo.jpg" alt="FPT Logo">
+            <div class="button-group">
+                <form action="xacNhanThanhToan.php" method="POST">
+                    <button type="submit" class="checkout-btn">Thanh Toán</button>
+                </form>
+                <form action="../index.php" method="POST">
+                    <button type="submit" class="back-btn">Trở về</button>
+                </form>
             </div>
-            <p class="company-info">CÔNG TY ĐIỆN TỬ FPT SỐ 1 VIỆT NAM</p>
-            <ul class="contact-info">
-                <li><i class="fa-solid fa-location-pin"></i> Tầng 2, Tòa nhà T10, Times City, Hà Nội</li>
-                <li><i class="fa-solid fa-phone-flip"></i> 1900.63.69.36</li>
-                <li><i class="fa-solid fa-envelope"></i> info@tocotocotea.com</li>
-            </ul>
-        </div>
-
-        <!-- Column 2 -->
-        <div class="footer-column">
-            <h3>VỀ CHÚNG TÔI</h3>
-            <ul>
-                <li><a href="#">Giới thiệu về TocoToco</a></li>
-                <li><a href="#">Nhượng quyền</a></li>
-                <li><a href="#">Tin tức khuyến mại</a></li>
-                <li><a href="#">Cửa hàng</a></li>
-                <li><a href="#">Quy định chung</a></li>
-            </ul>
-        </div>
-
-        <!-- Column 3 -->
-        <div class="footer-column">
-            <h3>CHÍNH SÁCH</h3>
-            <ul>
-                <li><a href="#">Chính sách thành viên</a></li>
-                <li><a href="#">Hình thức thanh toán</a></li>
-                <li><a href="#">Vận chuyển giao nhận</a></li>
-                <li><a href="#">Đổi trả và hoàn tiền</a></li>
-            </ul>
         </div>
     </div>
-
-    <!-- Footer Bottom -->
-    <div class="footer-bottom">
-        <p>&copy; 2024 FPT Việt Nam. All Rights Reserved.</p>
-    </div>
-</footer>
+    <?php include('footer.php'); ?>
 
 </body>
 

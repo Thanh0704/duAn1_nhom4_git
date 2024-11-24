@@ -114,7 +114,7 @@
             <!-- Tên chủ thẻ -->
             <div class="form-group">
                 <label for="cardholderName">Tên chủ thẻ</label>
-                <input type="text" id="cardholderName" name="cardholderName" required>
+                <input type="text" id="cardholderName" name="cardholderName" required placeholder="Nhập tên chủ thẻ">
             </div>
 
             <!-- Số thẻ -->
@@ -148,7 +148,7 @@
                 <button type="submit" class="btn btn-primary">Xác nhận thông tin</button>
 
                 <!-- Form Hủy -->
-                <form action="sanphamct.php" method="post">
+                <form action="../index.php" method="post">
                     <button type="submit">Hủy</button>
                 </form>
             </div>
