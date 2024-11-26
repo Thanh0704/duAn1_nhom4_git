@@ -151,7 +151,7 @@
             </nav> 
         </div>
     </header> -->
-   
+
     <!-- Main Content -->
     <main class="catalog">
         <!-- Bên trái -->
@@ -185,11 +185,22 @@
                 </form>
 
             </div>
-
             <div class="mb">
                 <div class="box_title">BÌNH LUẬN</div>
+
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <script>
+                    $(document).ready(function () {
+
+                        $("#binhluan").load("view/binhluan/binhluanform.php", {
+                            idpro: <?= $id ?>
+                        });
+                    });
+                </script>
+
+                <!-- card bình luận -->
                 <div class="card" id="binhluan">
-                    <!-- Bình luận AJAX -->
+
                 </div>
             </div>
 

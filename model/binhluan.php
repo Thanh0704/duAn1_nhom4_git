@@ -5,6 +5,7 @@ function insert_bl($noidung, $iduser, $idpro, $ngaybl) {
     pdo_execute($sql);
 }
 function loadbl_binhluan($idpro){
+   
     $sql ="SELECT * FROM binhluan where 1";
     if($idpro > 0 ){
         $sql .=" AND idpro='".$idpro."'";

@@ -99,6 +99,9 @@
             border-top: 1px solid #7f8c8d;
             margin-top: 20px;
         }
+        .footer-logo img{
+            border-radius: 100px;
+        }
     </style>
 </head>
 <body>
@@ -109,13 +112,13 @@
         <!-- Column 1 -->
         <div class="footer-column">
             <div class="footer-logo">
-                <img src="img/FPTShop_logo.jpg" alt="FPT Logo">
+                <img src="uploads/logoo.jpg" alt="FPT Logo">
             </div>
-            <p class="company-info">CÔNG TY ĐIỆN TỬ FPT SỐ 1 VIỆT NAM</p>
+            <p class="company-info"> PHỤ KIỆN ĐIỆN THOẠI GPHONE</p>
             <ul class="contact-info">
-                <li><i class="fa-solid fa-location-pin"></i> Tầng 2, Tòa nhà T10, Times City, Hà Nội</li>
-                <li><i class="fa-solid fa-phone-flip"></i> 1900.63.69.36</li>
-                <li><i class="fa-solid fa-envelope"></i> info@tocotocotea.com</li>
+                <li><i class="fa-solid fa-location-pin"></i> NHÓM 4, WD19319 - Dự án 1.TKTW</li>
+                <li><i class="fa-solid fa-phone-flip"></i> 0387.285.165</li>
+                <li><i class="fa-solid fa-envelope"></i> lexuanlam2005@gmail.com</li>
             </ul>
         </div>
 
@@ -145,7 +148,7 @@
 
     <!-- Footer Bottom -->
     <div class="footer-bottom">
-        <p>&copy; 2024 FPT Việt Nam. All Rights Reserved.</p>
+        <p>&copy; 2024 Du_An_1 Việt Nam. All Rights Reserved.</p>
     </div>
 </footer>
 
