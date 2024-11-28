@@ -3,7 +3,7 @@ $loadbl = loadbl_binhluan(0);
 ?>
 <div class="row2">
     <div class="row2 font_title">
-        <h1>DANH SÁCH BÌNH LUẬN</h1>
+        <h1>DANH SÁCH BÌNH LUẬNNNNNN</h1>
     </div>
     <div class="row2 form_content">
         <form action="#" method="POST">
